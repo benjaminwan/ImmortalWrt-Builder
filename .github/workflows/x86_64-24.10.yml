@@ -58,13 +58,13 @@ jobs:
           rm -rf $VENDOR-imagebuilder-$VERSION-x86-64.Linux-x86_64.tar.xz
           cp -r $GITHUB_WORKSPACE/origin/* $GITHUB_WORKSPACE/$VENDOR-imagebuilder-$VERSION-x86-64.Linux-x86_64/
       
-      - name: Download External Packages
-        working-directory: ${{ env.VENDOR }}-imagebuilder-${{ env.VERSION }}-x86-64.Linux-x86_64
-        run: |
-          cat external-package-urls24.10.txt | xargs wget -P packages
-          cd ./packages/
-          ls *.tar.gz | xargs -n1 tar xzvf
-          rm *tar.gz
+#      - name: Download External Packages
+#        working-directory: ${{ env.VENDOR }}-imagebuilder-${{ env.VERSION }}-x86-64.Linux-x86_64
+#        run: |
+#          cat external-package-24.10.txt | xargs wget -P packages
+#          cd ./packages/
+#          ls *.tar.gz | xargs -n1 tar xzvf
+#          rm *tar.gz
       
       - name: Run Patch and DIY Scripts
         working-directory: ${{ env.VENDOR }}-imagebuilder-${{ env.VERSION }}-x86-64.Linux-x86_64
