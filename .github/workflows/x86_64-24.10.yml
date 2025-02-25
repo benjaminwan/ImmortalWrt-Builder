@@ -9,7 +9,7 @@ on:
         description: 将编译出的镜像上传到 Release
         required: false
         default: 'true'
-      LAN_IP:
+      lan_ip:
         description: 'LAN IP'
         required: true
         default: '192.168.123.1'
@@ -19,6 +19,20 @@ on:
           - '192.168.10.1'
           - '192.168.100.1'
           - '192.168.123.1'
+      enable_pppoe:
+        description: "是否配置PPPoE拨号信息?"
+        required: true
+        default: 'no'
+        type: choice
+        options:
+          - 'yes'
+          - 'no'
+      pppoe_account:
+        description: "宽带账号 (若启用PPPoE)"
+        required: false
+      pppoe_password:
+        description: "宽带密码 (若启用PPPoE)"
+        required: false
 
 env:
   GITHUB_TOKEN: ${{secrets.GITHUB_TOKEN}}
@@ -35,6 +49,15 @@ jobs:
 
     # Steps represent a sequence of tasks that will be executed as part of the job
     steps:
+      - name: Validate PPPoE Inputs
+        run: |
+          if [[ "${{ inputs.enable_pppoe }}" == "yes" ]]; then
+            if [[ -z "${{ inputs.pppoe_account }}" || -z "${{ inputs.pppoe_password }}" ]]; then
+              echo "Error: PPPoE account and password must be provided when PPPoE is enabled!"
+              exit 1
+            fi
+          fi
+
       - name: Initialization Environment
         run: |
           sudo apt-get -qq update
@@ -65,11 +88,19 @@ jobs:
 #          cd ./packages/
 #          ls *.tar.gz | xargs -n1 tar xzvf
 #          rm *tar.gz
-      
+
+      - name: Patch PPPoE info
+        run: |
+          if [[ "${{ inputs.enable_pppoe }}" == "yes" ]]; then
+            sed -i "s/# pppoe_username=\"\"/pppoe_username="\${{ github.pppoe_account }}\"/g" files/etc/uci-defaults/99-init-settings
+            sed -i "s/# pppoe_password=\"\"/pppoe_password="\${{ github.pppoe_password }}\"/g" files/etc/uci-defaults/99-init-settings
+            cat files/etc/uci-defaults/99-init-settings
+          fi
+
       - name: Run Patch and DIY Scripts
         working-directory: ${{ env.VENDOR }}-imagebuilder-${{ env.VERSION }}-x86-64.Linux-x86_64
         run: |
-          sed -i "s/192\.168\.[0-9]*\.[0-9]*/${{ github.event.inputs.LAN_IP }}/g" files/etc/uci-defaults/99-init-settings
+          sed -i "s/192\.168\.[0-9]*\.[0-9]*/${{ github.inputs.lan_ip }}/g" files/etc/uci-defaults/99-init-settings
           bash scripts/builder-patch.sh
           bash scripts/zsh.sh
 
@@ -85,17 +116,17 @@ jobs:
           path: ${{ env.VENDOR }}-imagebuilder-${{ env.VERSION }}-x86-64.Linux-x86_64/bin/targets/x86/64/*
 
       - name: Upload Firmware to Release
-        if: github.event.inputs.release == 'true'
+        if: github.inputs.release == 'true'
         uses: svenstaro/upload-release-action@v2
         with:
           repo_token: ${{ secrets.GITHUB_TOKEN }}
           file_glob: true
           file: ${{ env.VENDOR }}-imagebuilder-${{ env.VERSION }}-x86-64.Linux-x86_64/bin/targets/x86/64/*
-          asset_name: ${{ github.event.repository.name }}-${{ github.sha }}
+          asset_name: ${{ github.repository.name }}-${{ github.sha }}
           tag: ${{ env.VENDOR }}-${{ env.VERSION }}-x86_64-${{ env.DATETIME }}
           overwrite: true
           body: |
-            LAN IP：${{ github.event.inputs.LAN_IP }}
+            LAN IP：${{ github.inputs.lan_ip }}
           
           
 #      - name: Delete Old Releases
