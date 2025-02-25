@@ -23,5 +23,5 @@ if [ -n "$pppoe_username" -a "$pppoe_password" ]; then
 fi
 
 # Set default shell
-which zsh && sed -i -- 's:/bin/bash:'`which zsh`':g' /etc/passwd
+which zsh && sed -i -- 's:/bin/ash:'`which zsh`':g' /etc/passwd
 exit 0
