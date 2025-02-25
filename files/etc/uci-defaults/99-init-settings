@@ -5,7 +5,7 @@
 #=================================================
 # Configure LAN
 # More options: https://openwrt.org/docs/guide-user/base-system/basic-networking
-lan_ip_address="192.168.123.1"
+lan_ip_address="192.168.1.1"
 if [ -n "$lan_ip_address" ]; then
   uci set network.lan.ipaddr="$lan_ip_address"
   uci commit network
@@ -13,8 +13,8 @@ fi
 
 # Configure PPPoE
 # More options: https://openwrt.org/docs/guide-user/network/wan/wan_interface_protocols#protocol_pppoe_ppp_over_ethernet
-pppoe_username="01234567890"
-pppoe_password="123456"
+# pppoe_username=""
+# pppoe_password=""
 if [ -n "$pppoe_username" -a "$pppoe_password" ]; then
   uci set network.wan.proto=pppoe
   uci set network.wan.username="$pppoe_username"
