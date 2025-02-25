@@ -1,6 +1,6 @@
 # This is a basic workflow to help you get started with Actions
 
-name: x86_64 immortalwrt Firmware
+name: immortalwrt x86_64 24.10
 
 on:
   workflow_dispatch:
