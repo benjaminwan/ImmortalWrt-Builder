@@ -114,6 +114,10 @@ jobs:
         working-directory: ${{ env.VENDOR }}-imagebuilder-${{ env.VERSION }}-x86-64.Linux-x86_64
         run: |
           bash build.sh
+
+      - name: List Output Files
+        working-directory: ${{ env.VENDOR }}-imagebuilder-${{ env.VERSION }}-x86-64.Linux-x86_64
+        run: |
           ls bin/targets/x86/64
 
       - name: Upload Artifacts ext4-combined-efi.img.gz
