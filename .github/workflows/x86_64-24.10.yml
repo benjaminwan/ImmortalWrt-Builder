@@ -62,21 +62,32 @@ jobs:
             fi
           fi
 
+      - name: Setup Environment Variables
+        run: |
+          echo "DATE=$(TZ=UTC-8 date +%Y%m%d)" >> $GITHUB_ENV
+          echo "DATETIME=$(TZ=UTC-8 date +'%Y%m%d%H%M%S')" >> $GITHUB_ENV
+
       - name: Initialization Environment
         run: |
           sudo apt-get -qq update
           sudo apt-get -qq install build-essential libncurses5-dev libncursesw5-dev zlib1g-dev gawk git gettext libssl-dev xsltproc rsync wget unzip qemu-utils mkisofs zstd
           sudo timedatectl set-timezone "Asia/Shanghai"
-      - name: Setup Environment Variables
-        run: |
-          echo "DATE=$(TZ=UTC-8 date +%Y%m%d)" >> $GITHUB_ENV
-          echo "DATETIME=$(TZ=UTC-8 date +'%Y%m%d%H%M%S')" >> $GITHUB_ENV
-      
+
       # Checks-out your repository under $GITHUB_WORKSPACE, so your job can access it
       - name: Checkout
         uses: actions/checkout@v4
-        with: 
+        with:
           path: origin
+
+      - name: Patch inputs info
+        working-directory: $GITHUB_WORKSPACE/origin
+        run: |
+          if [[ "${{ inputs.enable_pppoe }}" == "yes" ]]; then
+            sed -i "s/# pppoe_username=\"\"/pppoe_username=\"${{ inputs.pppoe_account }}\"/g" files/etc/uci-defaults/99-init-settings
+            sed -i "s/# pppoe_password=\"\"/pppoe_password=\"${{ inputs.pppoe_password }}\"/g" files/etc/uci-defaults/99-init-settings
+          fi
+          sed -i "s/192\.168\.[0-9]*\.[0-9]*/${{ inputs.lan_ip }}/g" files/etc/uci-defaults/99-init-settings
+          cat files/etc/uci-defaults/99-init-settings
 
       - name: Download Image Builder
         run: |
@@ -84,7 +95,7 @@ jobs:
           tar --use-compress-program=unzstd -xvf $VENDOR-imagebuilder-$VERSION-x86-64.Linux-x86_64.tar.zst
           rm -rf $VENDOR-imagebuilder-$VERSION-x86-64.Linux-x86_64.tar.zst
           cp -r $GITHUB_WORKSPACE/origin/* $GITHUB_WORKSPACE/$VENDOR-imagebuilder-$VERSION-x86-64.Linux-x86_64/
-      
+
 #      - name: Download External Packages
 #        working-directory: ${{ env.VENDOR }}-imagebuilder-${{ env.VERSION }}-x86-64.Linux-x86_64
 #        run: |
@@ -93,19 +104,9 @@ jobs:
 #          ls *.tar.gz | xargs -n1 tar xzvf
 #          rm *tar.gz
 
-      - name: Patch PPPoE info
-        working-directory: ${{ env.VENDOR }}-imagebuilder-${{ env.VERSION }}-x86-64.Linux-x86_64
-        run: |
-          if [[ "${{ inputs.enable_pppoe }}" == "yes" ]]; then
-            sed -i "s/# pppoe_username=\"\"/pppoe_username=\"${{ github.pppoe_account }}\"/g" files/etc/uci-defaults/99-init-settings
-            sed -i "s/# pppoe_password=\"\"/pppoe_password=\"${{ github.pppoe_password }}\"/g" files/etc/uci-defaults/99-init-settings
-            cat files/etc/uci-defaults/99-init-settings
-          fi
-
       - name: Run Patch and DIY Scripts
         working-directory: ${{ env.VENDOR }}-imagebuilder-${{ env.VERSION }}-x86-64.Linux-x86_64
         run: |
-          sed -i "s/192\.168\.[0-9]*\.[0-9]*/${{ github.inputs.lan_ip }}/g" files/etc/uci-defaults/99-init-settings
           bash scripts/builder-patch.sh
           bash scripts/zsh.sh
 
@@ -121,7 +122,7 @@ jobs:
           path: ${{ env.VENDOR }}-imagebuilder-${{ env.VERSION }}-x86-64.Linux-x86_64/bin/targets/x86/64/*.gz
 
       - name: Upload Firmware to Release
-        if: github.inputs.release == 'yes'
+        if: inputs.release == 'yes'
         uses: svenstaro/upload-release-action@v2
         with:
           repo_token: ${{ secrets.GITHUB_TOKEN }}
@@ -131,7 +132,7 @@ jobs:
           tag: ${{ env.VENDOR }}-${{ env.VERSION }}-x86_64-${{ env.DATETIME }}
           overwrite: true
           body: |
-            LAN IP：${{ github.inputs.lan_ip }}
+            LAN IP：${{ inputs.lan_ip }}
           
           
 #      - name: Delete Old Releases
