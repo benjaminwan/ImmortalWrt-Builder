@@ -80,7 +80,7 @@ jobs:
           path: origin
 
       - name: Patch inputs info
-        working-directory: $GITHUB_WORKSPACE/origin
+        working-directory: origin
         run: |
           if [[ "${{ inputs.enable_pppoe }}" == "yes" ]]; then
             sed -i "s/# pppoe_username=\"\"/pppoe_username=\"${{ inputs.pppoe_account }}\"/g" files/etc/uci-defaults/99-init-settings
