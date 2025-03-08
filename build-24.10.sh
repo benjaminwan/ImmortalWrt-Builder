@@ -48,7 +48,7 @@ PACKAGES="$PACKAGES luci-app-smartdns luci-i18n-smartdns-zh-cn"
 # 文件管理
 PACKAGES="$PACKAGES luci-app-filemanager luci-i18n-filemanager-zh-cn"
 # Passwall
-PACKAGES="$PACKAGES luci-app-passwall luci-i18n-passwall-zh-cn"
+PACKAGES="$PACKAGES luci-app-passwall luci-i18n-passwall-zh-cn haproxy"
 # Passwall依赖
 if [ $ENABLE_PW_EXT -eq 1 ]; then
     echo "启用Passwall依赖项"
