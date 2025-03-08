@@ -1,6 +1,6 @@
 # This is a basic workflow to help you get started with Actions
 
-name: immortalwrt x86_64 24.10
+name: immortalwrt x86_64-23.05
 
 on:
   workflow_dispatch:
@@ -42,7 +42,7 @@ env:
   GITHUB_TOKEN: ${{secrets.GITHUB_TOKEN}}
   DOWNLOAD_BASE: https://downloads.immortalwrt.org
   VENDOR: immortalwrt
-  VERSION: 24.10.0
+  VERSION: 23.05.4
 
 # A workflow run is made up of one or more jobs that can run sequentially or in parallel
 jobs:
@@ -91,18 +91,18 @@ jobs:
 
       - name: Download Image Builder
         run: |
-          wget $DOWNLOAD_BASE/releases/$VERSION/targets/x86/64/$VENDOR-imagebuilder-$VERSION-x86-64.Linux-x86_64.tar.zst
-          tar --use-compress-program=unzstd -xvf $VENDOR-imagebuilder-$VERSION-x86-64.Linux-x86_64.tar.zst
-          rm -rf $VENDOR-imagebuilder-$VERSION-x86-64.Linux-x86_64.tar.zst
+          wget $DOWNLOAD_BASE/releases/$VERSION/targets/x86/64/$VENDOR-imagebuilder-$VERSION-x86-64.Linux-x86_64.tar.xz
+          tar -xvf $VENDOR-imagebuilder-$VERSION-x86-64.Linux-x86_64.tar.xz
+          rm -rf $VENDOR-imagebuilder-$VERSION-x86-64.Linux-x86_64.tar.xz
           cp -r $GITHUB_WORKSPACE/origin/* $GITHUB_WORKSPACE/$VENDOR-imagebuilder-$VERSION-x86-64.Linux-x86_64/
 
-#      - name: Download External Packages
-#        working-directory: ${{ env.VENDOR }}-imagebuilder-${{ env.VERSION }}-x86-64.Linux-x86_64
-#        run: |
-#          cat external-package-24.10.txt | xargs wget -P packages
-#          cd ./packages/
-#          ls *.tar.gz | xargs -n1 tar xzvf
-#          rm *tar.gz
+      #      - name: Download External Packages
+      #        working-directory: ${{ env.VENDOR }}-imagebuilder-${{ env.VERSION }}-x86-64.Linux-x86_64
+      #        run: |
+      #          cat external-package-urls23.05.txt | xargs wget -P packages
+      #          cd ./packages/
+      #          ls *.tar.gz | xargs -n1 tar xzvf
+      #          rm *tar.gz
 
       - name: Run Patch and DIY Scripts
         working-directory: ${{ env.VENDOR }}-imagebuilder-${{ env.VERSION }}-x86-64.Linux-x86_64
