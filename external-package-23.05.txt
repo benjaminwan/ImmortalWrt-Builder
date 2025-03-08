@@ -1,0 +1,3 @@
+https://github.com/xiaorouji/openwrt-passwall/releases/download/25.2.12-1/luci-23.05_luci-app-passwall_25.2.12_all.ipk
+https://github.com/xiaorouji/openwrt-passwall/releases/download/25.2.12-1/luci-23.05_luci-i18n-passwall-zh-cn_git-25.043.51583-d5ce45c_all.ipk
+https://github.com/xiaorouji/openwrt-passwall/releases/download/25.2.12-1/passwall_packages_ipk_x86_64.zip

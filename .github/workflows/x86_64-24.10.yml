@@ -23,6 +23,14 @@ on:
           - '192.168.10.1'
           - '192.168.100.1'
           - '192.168.123.1'
+      download_pkg:
+        description: "是否下载附加包?"
+        required: true
+        default: 'yes'
+        type: choice
+        options:
+          - 'yes'
+          - 'no'
       enable_pppoe:
         description: "是否配置PPPoE拨号信息?"
         required: true
@@ -96,13 +104,16 @@ jobs:
           rm -rf $VENDOR-imagebuilder-$VERSION-x86-64.Linux-x86_64.tar.zst
           cp -r $GITHUB_WORKSPACE/origin/* $GITHUB_WORKSPACE/$VENDOR-imagebuilder-$VERSION-x86-64.Linux-x86_64/
 
-#      - name: Download External Packages
-#        working-directory: ${{ env.VENDOR }}-imagebuilder-${{ env.VERSION }}-x86-64.Linux-x86_64
-#        run: |
-#          cat external-package-24.10.txt | xargs wget -P packages
-#          cd ./packages/
-#          ls *.tar.gz | xargs -n1 tar xzvf
-#          rm *tar.gz
+      - name: Download External Packages
+        if: ${{ inputs.download_pkg == 'yes' }}
+        working-directory: ${{ env.VENDOR }}-imagebuilder-${{ env.VERSION }}-x86-64.Linux-x86_64
+        run: |
+          cat external-package-24.10.txt | xargs wget -P packages
+          cd ./packages/
+          ls *.zip | xargs -n1 unzip
+          rm *zip
+          rm *placeholder*
+          ls
 
       - name: Run Patch and DIY Scripts
         working-directory: ${{ env.VENDOR }}-imagebuilder-${{ env.VERSION }}-x86-64.Linux-x86_64
