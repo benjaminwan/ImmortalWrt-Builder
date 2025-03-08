@@ -8,7 +8,7 @@ PACKAGES=""
 # 基础组件
 PACKAGES="$PACKAGES curl bash git"
 # 界面翻译补全
-PACKAGES="$PACKAGES luci-i18n-base-zh-cn luci-i18n-firewall-zh-cn"
+PACKAGES="$PACKAGES luci-i18n-base-zh-cn luci-i18n-firewall-zh-cn luci-i18n-opkg-zh-cn"
 # 主题
 PACKAGES="$PACKAGES luci-theme-argon luci-app-argon-config luci-i18n-argon-config-zh-cn"
 # 常用kmod组件
