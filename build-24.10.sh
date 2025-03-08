@@ -1,5 +1,20 @@
 #!/bin/bash
 
+ENABLE_PW_EXT=0
+
+while getopts "p" arg; do
+    case $arg in
+    p)
+        echo "p's arg:$OPTARG"
+        ENABLE_PW_EXT=1
+        ;;
+    ?)
+        echo -e "unkonw argument."
+        exit 1
+        ;;
+    esac
+done
+
 # 打印 info
 make info
 # 主配置名称
@@ -34,6 +49,16 @@ PACKAGES="$PACKAGES luci-app-smartdns luci-i18n-smartdns-zh-cn"
 PACKAGES="$PACKAGES luci-app-filemanager luci-i18n-filemanager-zh-cn"
 # Passwall
 PACKAGES="$PACKAGES luci-app-passwall luci-i18n-passwall-zh-cn"
+# Passwall依赖
+if [ $ENABLE_PW_EXT -eq 1 ]; then
+    echo "启用Passwall依赖项"
+    PACKAGES="$PACKAGES kmod-nft-socket kmod-nft-tproxy chinadns-ng dns2socks geoview hysteria ipt2socks microsocks naiveproxy"
+    PACKAGES="$PACKAGES shadowsocks-libev-ss-local shadowsocks-libev-ss-redir shadowsocks-libev-ss-server shadowsocksr-libev-ssr-local shadowsocksr-libev-ssr-redir shadowsocksr-libev-ssr-server"
+    PACKAGES="$PACKAGES shadowsocks-rust-sslocal shadowsocks-rust-ssserver simple-obfs sing-box tcping trojan-plus tuic-client"
+    PACKAGES="$PACKAGES v2ray-geoip v2ray-geosite v2ray-plugin xray-core xray-plugin"
+else
+    echo "禁用Passwall依赖项"
+fi
 # zsh 终端
 PACKAGES="$PACKAGES zsh"
 # Vim 完整版，带语法高亮
