@@ -1,6 +1,6 @@
 # This is a basic workflow to help you get started with Actions
 
-name: immortalwrt x86_64-23.05
+name: immortalwrt x86_64 23.05
 
 on:
   workflow_dispatch:
@@ -17,12 +17,12 @@ on:
         description: 'LAN IP'
         required: true
         default: '192.168.123.1'
-        type: choice
-        options:
-          - '192.168.1.1'
-          - '192.168.10.1'
-          - '192.168.100.1'
-          - '192.168.123.1'
+#        type: choice
+#        options:
+#          - '192.168.1.1'
+#          - '192.168.10.1'
+#          - '192.168.100.1'
+#          - '192.168.123.1'
       download_pkg:
         description: "是否下载附加包?"
         required: true
@@ -124,7 +124,11 @@ jobs:
       - name: Generate Firmware
         working-directory: ${{ env.VENDOR }}-imagebuilder-${{ env.VERSION }}-x86-64.Linux-x86_64
         run: |
-          bash build-23.05.sh
+          if [[ "${{ inputs.download_pkg }}" == "yes" ]]; then
+            bash build-23.05.sh -p
+          else
+            bash build-23.05.sh
+          fi
 
       - name: List Output Files
         working-directory: ${{ env.VENDOR }}-imagebuilder-${{ env.VERSION }}-x86-64.Linux-x86_64/bin/targets/x86/64
