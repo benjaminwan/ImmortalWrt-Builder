@@ -19,7 +19,7 @@ sed -i "s/CONFIG_ISO_IMAGES=y/# CONFIG_ISO_IMAGES is not set/" .config
 sed -i "s/CONFIG_VHDX_IMAGES=y/# CONFIG_VHDX_IMAGES is not set/" .config
 sed -i "s/CONFIG_VDI_IMAGES=y/# CONFIG_VDI_IMAGES is not set/" .config
 sed -i "s/# CONFIG_VMDK_IMAGES is not set/CONFIG_VMDK_IMAGES=y/" .config
-sed -i "s/CONFIG_QCOW2_IMAGES=y/# CONFIG_QCOW2_IMAGES is not set/" .config
+sed -i "s/CONFIG_QCOW2_IMAGES=n/CONFIG_QCOW2_IMAGES=y/" .config
 #sed -i "s/# CONFIG_TARGET_ROOTFS_TARGZ is not set/CONFIG_TARGET_ROOTFS_TARGZ=y/" .config
 sed -i "s/# CONFIG_TARGET_ROOTFS_EXT4FS is not set/CONFIG_TARGET_ROOTFS_EXT4FS=y/" .config
 # 修改分区大小
