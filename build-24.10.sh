@@ -1,12 +1,12 @@
 #!/bin/bash
 
-ENABLE_PW_EXT=0
+ENABLE_PKG=0
 
 while getopts "p" arg; do
     case $arg in
     p)
         echo "p's arg:$OPTARG"
-        ENABLE_PW_EXT=1
+        ENABLE_PKG=1
         ;;
     ?)
         echo -e "unkonw argument."
@@ -50,14 +50,19 @@ PACKAGES="$PACKAGES luci-app-filemanager luci-i18n-filemanager-zh-cn"
 # Passwall
 PACKAGES="$PACKAGES luci-app-passwall luci-i18n-passwall-zh-cn haproxy"
 # Passwall依赖
-if [ $ENABLE_PW_EXT -eq 1 ]; then
-    echo "启用Passwall依赖项"
-    PACKAGES="$PACKAGES kmod-nft-socket kmod-nft-tproxy chinadns-ng dns2socks geoview hysteria ipt2socks microsocks naiveproxy"
-    PACKAGES="$PACKAGES shadowsocks-libev-ss-local shadowsocks-libev-ss-redir shadowsocks-libev-ss-server shadowsocksr-libev-ssr-local shadowsocksr-libev-ssr-redir shadowsocksr-libev-ssr-server"
-    PACKAGES="$PACKAGES shadowsocks-rust-sslocal shadowsocks-rust-ssserver simple-obfs sing-box tcping trojan-plus tuic-client"
-    PACKAGES="$PACKAGES v2ray-geoip v2ray-geosite v2ray-plugin xray-core xray-plugin"
+PASSWALL_EXT="kmod-nft-socket kmod-nft-tproxy chinadns-ng dns2socks geoview hysteria ipt2socks microsocks naiveproxy"
+PASSWALL_EXT+=" shadowsocks-libev-ss-local shadowsocks-libev-ss-redir shadowsocks-libev-ss-server shadowsocksr-libev-ssr-local"
+PASSWALL_EXT+=" shadowsocksr-libev-ssr-redir shadowsocksr-libev-ssr-server"
+PASSWALL_EXT+=" shadowsocks-rust-sslocal shadowsocks-rust-ssserver simple-obfs sing-box tcping trojan-plus tuic-client"
+PASSWALL_EXT+=" v2ray-geoip v2ray-geosite v2ray-plugin xray-core xray-plugin"
+# nikki
+NIKKI="nikki luci-app-nikki luci-i18n-nikki-zh-cn"
+if [ $ENABLE_PKG -eq 1 ]; then
+    echo "启用附加包"
+    PACKAGES="$PACKAGES $PASSWALL_EXT"
+    PACKAGES="$PACKAGES $NIKKI"
 else
-    echo "禁用Passwall依赖项"
+    echo "禁用附加包"
 fi
 # zsh 终端
 PACKAGES="$PACKAGES zsh"

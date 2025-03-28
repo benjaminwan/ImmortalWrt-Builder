@@ -23,8 +23,8 @@ on:
 #          - '192.168.10.1'
 #          - '192.168.100.1'
 #          - '192.168.123.1'
-      download_pkg:
-        description: "是否下载附加包?"
+      enable_pkg:
+        description: "下载附加包?"
         required: true
         default: 'yes'
         type: choice
@@ -51,6 +51,8 @@ env:
   DOWNLOAD_BASE: https://downloads.immortalwrt.org
   VENDOR: immortalwrt
   VERSION: 23.05.4
+  EXT_PKG_FILE: external-package-23.05.txt
+  BUILD_SCRIPT: build-23.05.sh
 
 # A workflow run is made up of one or more jobs that can run sequentially or in parallel
 jobs:
@@ -105,13 +107,21 @@ jobs:
           cp -r $GITHUB_WORKSPACE/origin/* $GITHUB_WORKSPACE/$VENDOR-imagebuilder-$VERSION-x86-64.Linux-x86_64/
 
       - name: Download External Packages
-        if: ${{ inputs.download_pkg == 'yes' }}
+        if: ${{ inputs.enable_pkg == 'yes' }}
         working-directory: ${{ env.VENDOR }}-imagebuilder-${{ env.VERSION }}-x86-64.Linux-x86_64
         run: |
-          cat external-package-23.05.txt | xargs wget -P packages
+          temp_dir=$(mktemp -d)
+          echo "Downloading packages"
+          cat ${{ env.EXT_PKG_FILE }} | xargs wget -P "$temp_dir"
           cd ./packages/
-          ls *.zip | xargs -n1 unzip
-          rm *zip
+          pkg_dir=$(pwd)
+          echo "Extracting packages"         
+          find "$temp_dir" -maxdepth 1 -name "*.tar.gz"|xargs -i tar -xzf {} -C "$temp_dir"
+          find "$temp_dir" -maxdepth 1 -name "*.tar.xz"|xargs -i tar -xJf {} -C "$temp_dir"
+          find "$temp_dir" -maxdepth 1 -name "*.tar.bz2"|xargs -i tar -xjf {} -C "$temp_dir"
+          find "$temp_dir" -maxdepth 1 -name "*.tgz"|xargs -i tar -xzf {} -C "$temp_dir"
+          find "$temp_dir" -maxdepth 1 -name "*.zip"|xargs -i unzip -q {} -d "$temp_dir"        
+          find "$temp_dir" -name "*.ipk" -exec cp {} "$pkg_dir" \;
           rm *placeholder*
           ls
 
@@ -124,10 +134,10 @@ jobs:
       - name: Generate Firmware
         working-directory: ${{ env.VENDOR }}-imagebuilder-${{ env.VERSION }}-x86-64.Linux-x86_64
         run: |
-          if [[ "${{ inputs.download_pkg }}" == "yes" ]]; then
-            bash build-23.05.sh -p
+          if [[ "${{ inputs.enable_pkg }}" == "yes" ]]; then
+            bash ${{ env.BUILD_SCRIPT }} -p
           else
-            bash build-23.05.sh
+            bash ${{ env.BUILD_SCRIPT }}
           fi
 
       - name: List Output Files
