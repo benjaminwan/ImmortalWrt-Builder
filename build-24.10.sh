@@ -45,6 +45,8 @@ PACKAGES="$PACKAGES luci-app-socat luci-i18n-socat-zh-cn"
 PACKAGES="$PACKAGES luci-app-upnp luci-i18n-upnp-zh-cn"
 # SmartDns
 PACKAGES="$PACKAGES luci-app-smartdns luci-i18n-smartdns-zh-cn"
+# adguardhome
+PACKAGES="$PACKAGES adguardhome"
 # 文件管理
 PACKAGES="$PACKAGES luci-app-filemanager luci-i18n-filemanager-zh-cn"
 # Passwall
