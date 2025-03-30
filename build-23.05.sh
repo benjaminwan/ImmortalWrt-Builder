@@ -40,7 +40,7 @@ PACKAGES="$PACKAGES luci-app-wol luci-i18n-wol-zh-cn"
 # DDNS
 PACKAGES="$PACKAGES luci-app-ddns-go luci-i18n-ddns-go-zh-cn"
 # Socat网络工具
-PACKAGES="$PACKAGES luci-app-socat luci-i18n-socat-zh-cn"
+#PACKAGES="$PACKAGES luci-app-socat luci-i18n-socat-zh-cn"
 # upnp
 PACKAGES="$PACKAGES luci-app-upnp luci-i18n-upnp-zh-cn"
 # SmartDns
