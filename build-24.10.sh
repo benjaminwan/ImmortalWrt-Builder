@@ -53,8 +53,7 @@ PACKAGES="$PACKAGES luci-app-filemanager luci-i18n-filemanager-zh-cn"
 PACKAGES="$PACKAGES luci-app-passwall luci-i18n-passwall-zh-cn haproxy"
 # Passwall依赖
 PASSWALL_EXT="kmod-nft-socket kmod-nft-tproxy chinadns-ng dns2socks geoview hysteria ipt2socks microsocks naiveproxy"
-PASSWALL_EXT+=" shadowsocks-libev-ss-local shadowsocks-libev-ss-redir shadowsocks-libev-ss-server shadowsocksr-libev-ssr-local"
-PASSWALL_EXT+=" shadowsocksr-libev-ssr-redir shadowsocksr-libev-ssr-server"
+PASSWALL_EXT+=" shadowsocksr-libev-ssr-local shadowsocksr-libev-ssr-redir shadowsocksr-libev-ssr-server"
 PASSWALL_EXT+=" shadowsocks-rust-sslocal shadowsocks-rust-ssserver simple-obfs sing-box tcping trojan-plus tuic-client"
 PASSWALL_EXT+=" v2ray-geoip v2ray-geosite v2ray-plugin xray-core xray-plugin"
 # nikki
