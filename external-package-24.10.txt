@@ -1,4 +1,4 @@
 https://github.com/xiaorouji/openwrt-passwall/releases/download/25.6.1-1/luci-24.10_luci-app-passwall_25.6.1-r1_all.ipk
 https://github.com/xiaorouji/openwrt-passwall/releases/download/25.6.1-1/luci-24.10_luci-i18n-passwall-zh-cn_25.151.44858.20e3fbd_all.ipk
 https://github.com/xiaorouji/openwrt-passwall/releases/download/25.6.1-1/passwall_packages_ipk_x86_64.zip
-https://github.com/nikkinikki-org/OpenWrt-nikki/releases/download/v1.22.4/nikki_x86_64-openwrt-24.10.tar.gz
+https://github.com/nikkinikki-org/OpenWrt-nikki/releases/download/v1.23.0/nikki_x86_64-openwrt-24.10.tar.gz
