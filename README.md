@@ -15,4 +15,5 @@
 - QCOW2格式，适用于飞牛OS的虚拟机
 
 ### PACKAGES定制
-- 修改build.sh
+- 修改build-版本.sh
+- 官方luci包列表：https://downloads.immortalwrt.org/releases/24.10.5/packages/x86_64/luci/Packages
