@@ -16,4 +16,4 @@
 
 ### PACKAGES定制
 - 修改build-版本.sh
-- 官方luci包列表：https://downloads.immortalwrt.org/releases/24.10.5/packages/x86_64/luci/Packages
+- 官方luci包列表：https://downloads.immortalwrt.org/releases/24.10.6/packages/x86_64/luci/Packages

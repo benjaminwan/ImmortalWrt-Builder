@@ -50,7 +50,7 @@ env:
   GITHUB_TOKEN: ${{secrets.GITHUB_TOKEN}}
   DOWNLOAD_BASE: https://downloads.immortalwrt.org
   VENDOR: immortalwrt
-  VERSION: 24.10.5
+  VERSION: 24.10.6
   EXT_PKG_FILE: external-package-24.10.txt
   BUILD_SCRIPT: build-24.10.sh
 
